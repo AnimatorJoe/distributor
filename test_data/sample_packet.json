@@ -1,0 +1,62 @@
+{
+  "packet_id": "sample-packet-001",
+  "messages": [
+    {
+      "timestamp": "2025-11-09T10:30:00.000Z",
+      "level": "INFO",
+      "message": "User login successful",
+      "source": "auth-service",
+      "metadata": {
+        "user_id": 12345,
+        "ip_address": "192.168.1.100",
+        "session_id": "abc123def456"
+      }
+    },
+    {
+      "timestamp": "2025-11-09T10:30:01.234Z",
+      "level": "DEBUG",
+      "message": "Database query executed",
+      "source": "database-service",
+      "metadata": {
+        "query_time_ms": 45,
+        "rows_returned": 10,
+        "query_id": "q-789"
+      }
+    },
+    {
+      "timestamp": "2025-11-09T10:30:02.567Z",
+      "level": "WARN",
+      "message": "High memory usage detected",
+      "source": "monitoring-service",
+      "metadata": {
+        "memory_usage_percent": 85,
+        "threshold_percent": 80,
+        "host": "server-01"
+      }
+    },
+    {
+      "timestamp": "2025-11-09T10:30:03.890Z",
+      "level": "ERROR",
+      "message": "Failed to connect to external API",
+      "source": "integration-service",
+      "metadata": {
+        "api_endpoint": "https://api.example.com/data",
+        "error_code": "CONNECTION_TIMEOUT",
+        "retry_count": 3
+      }
+    },
+    {
+      "timestamp": "2025-11-09T10:30:05.123Z",
+      "level": "INFO",
+      "message": "Cache cleared successfully",
+      "source": "cache-service",
+      "metadata": {
+        "cache_type": "redis",
+        "keys_cleared": 1234,
+        "operation_time_ms": 150
+      }
+    }
+  ],
+  "received_at": "2025-11-09T10:30:05.200Z"
+}
+

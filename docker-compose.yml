@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  distributor:
+    build:
+      context: .
+      dockerfile: Dockerfile.distributor
+    container_name: logs-distributor
+    ports:
+      - "8000:8000"
+    environment:
+      - ANALYZERS_CONFIG=analyzer1:http://analyzer1:8001:0.4,analyzer2:http://analyzer2:8002:0.3,analyzer3:http://analyzer3:8003:0.2,analyzer4:http://analyzer4:8004:0.1
+      - HEALTH_CHECK_INTERVAL_SECONDS=5
+      - HEALTH_CHECK_TIMEOUT_SECONDS=2
+      - MAX_CONSECUTIVE_FAILURES=3
+    depends_on:
+      - analyzer1
+      - analyzer2
+      - analyzer3
+      - analyzer4
+    networks:
+      - logs-network
+
+  analyzer1:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    container_name: analyzer1
+    environment:
+      - ANALYZER_ID=analyzer1
+      - ANALYZER_PORT=8001
+    ports:
+      - "8001:8001"
+    command: ["python", "-m", "uvicorn", "analyzer.analyzer:app", "--host", "0.0.0.0", "--port", "8001"]
+    networks:
+      - logs-network
+
+  analyzer2:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    container_name: analyzer2
+    environment:
+      - ANALYZER_ID=analyzer2
+      - ANALYZER_PORT=8002
+    ports:
+      - "8002:8002"
+    command: ["python", "-m", "uvicorn", "analyzer.analyzer:app", "--host", "0.0.0.0", "--port", "8002"]
+    networks:
+      - logs-network
+
+  analyzer3:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    container_name: analyzer3
+    environment:
+      - ANALYZER_ID=analyzer3
+      - ANALYZER_PORT=8003
+    ports:
+      - "8003:8003"
+    command: ["python", "-m", "uvicorn", "analyzer.analyzer:app", "--host", "0.0.0.0", "--port", "8003"]
+    networks:
+      - logs-network
+
+  analyzer4:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    container_name: analyzer4
+    environment:
+      - ANALYZER_ID=analyzer4
+      - ANALYZER_PORT=8004
+    ports:
+      - "8004:8004"
+    command: ["python", "-m", "uvicorn", "analyzer.analyzer:app", "--host", "0.0.0.0", "--port", "8004"]
+    networks:
+      - logs-network
+
+networks:
+  logs-network:
+    driver: bridge
+

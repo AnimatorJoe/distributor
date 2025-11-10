@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy analyzer code
+COPY analyzer/ ./analyzer/
+
+# Expose port (will be overridden by docker-compose)
+EXPOSE 8001
+
+# Run the analyzer
+CMD ["python", "-m", "uvicorn", "analyzer.analyzer:app", "--host", "0.0.0.0", "--port", "${ANALYZER_PORT:-8001}"]
+
