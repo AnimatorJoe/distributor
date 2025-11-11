@@ -23,7 +23,7 @@ All demos require the distributor running in a separate terminal:
 
 **Terminal 1 (Distributor)**:
 ```bash
-python run_distributor.py
+python -m uvicorn distributor.distributor:app --port 8000
 ```
 
 Then run any demo in Terminal 2:
