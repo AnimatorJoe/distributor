@@ -72,6 +72,13 @@ async def main():
             if response.status_code != 200:
                 logger.error("Distributor is not healthy!")
                 return
+            
+            # Reset distributor statistics for clean metrics
+            logger.info("Resetting distributor statistics...")
+            response = await client.post(f"{distributor_url}/reset", timeout=2.0)
+            if response.status_code == 200:
+                logger.info("✓ Distributor statistics reset")
+            
     except Exception:
         logger.error(f"Cannot connect to distributor at {distributor_url}")
         logger.error("Please start the distributor first: python run_distributor.py")

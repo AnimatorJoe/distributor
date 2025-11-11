@@ -52,10 +52,17 @@ async def main():
             if response.status_code != 200:
                 logger.error("Distributor is not healthy!")
                 return
-    except Exception:
+            
+            # Reset distributor statistics for clean metrics
+            logger.info("Resetting distributor statistics...")
+            response = await client.post(f"{distributor_url}/reset", timeout=2.0)
+            if response.status_code == 200:
+                logger.info("✓ Distributor statistics reset")
+            
+    except Exception as e:
         logger.error(f"Cannot connect to distributor at {distributor_url}")
         logger.error("Please start the distributor first:")
-        logger.error("  python -m uvicorn distributor.distributor:app --port 8000")
+        logger.error("  python run_distributor.py")
         return
     
     logger.info(f"✓ Distributor is running at {distributor_url}\n")

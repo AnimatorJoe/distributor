@@ -403,6 +403,35 @@ class Distributor:
                 "active": metrics.active_analyzers
             }
         }
+    
+    async def reset_stats(self):
+        """
+        Reset all statistics counters and clear all data structures.
+        
+        This is useful when running multiple demos sequentially
+        without restarting the distributor.
+        """
+        # Clear all data structures
+        async with self.queue_lock:
+            self.queue.clear()
+        
+        async with self.in_progress_lock:
+            self.in_progress.clear()
+        
+        async with self.data_lock:
+            self.data_store.clear()
+        
+        # Clear completed/failed tracking
+        self.completed.clear()
+        self.failed.clear()
+        
+        # Reset statistics counters
+        self.total_tasks_received = 0
+        self.total_tasks_completed = 0
+        self.total_tasks_failed = 0
+        self.total_tasks_requeued = 0
+        
+        self.logger.info(f"{Colors.BOLD}{Colors.GREEN}✓ Statistics reset - all counters cleared{Colors.RESET}")
 
 
 # FastAPI app for Distributor
@@ -539,4 +568,23 @@ async def get_metrics():
     
     metrics = await distributor.get_metrics()
     return metrics
+
+
+@app.post("/reset")
+async def reset():
+    """
+    Reset all distributor statistics and clear all data.
+    
+    This is useful when running multiple demos sequentially without
+    restarting the distributor server.
+    """
+    if not distributor:
+        raise HTTPException(status_code=503, detail="Distributor not initialized")
+    
+    await distributor.reset_stats()
+    
+    return {
+        "status": "reset",
+        "message": "All statistics and data cleared"
+    }
 
